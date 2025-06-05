@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Media DediR Social Media</title>
+<style>
+  /* Reset some default */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    color: #242526;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  #app {
+    width: 100%;
+    max-width: 480px;
+    background: #fff;
+    box-shadow: 0 4px 18px rgb(0 0 0 / 0.10);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  header {
+    background: #0052cc;
+    color: #fff;
+    padding: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 0.06em;
+    user-select: none;
+  }
+  .hidden {
+    display: none !important;
+  }
+  .form-container {
+    padding: 1.5rem;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  input[type="text"],
+  input[type="password"] {
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    outline: none;
+    border-color: #0052cc;
+  }
+  button {
+    background: #0052cc;
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #003a99;
+  }
+  .link-button {
+    background: none;
+    border: none;
+    color: #0052cc;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0;
+    font-size: 0.9rem;
+    align-self: flex-start;
+    text-decoration: underline;
+  }
+  .error-message {
+    color: #d93025;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  /* Feed styles */
+  #feed {
+    padding: 1rem;
+    max-height: 480px;
+    overflow-y: auto;
+    border-top: 1px solid #ddd;
+  }
+  #post-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  #post-input {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+  }
+  #post-input:focus {
+    outline: none;
+    border-color: #0052cc;
+  }
+  .post {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.07);
+  }
+  .post-header {
+    font-weight: 700;
+    color: #0052cc;
+    margin-bottom: 0.25rem;
+  }
+  .post-message {
+    white-space: pre-wrap;
+  }
+  /* User info bar */
+  #userbar {
+    padding: 1rem;
+    background: #f0f2f5;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #username-display {
+    font-weight: 700;
+    color: #0052cc;
+  }
+  #logout-btn {
+    background: #c53030;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #logout-btn:hover {
+    background: #822020;
+  }
+  /* Scrollbar styling */
+  #feed::-webkit-scrollbar {
+    width: 8px;
+  }
+  #feed::-webkit-scrollbar-track {
+    background: #f0f2f5;
+    border-radius: 4px;
+  }
+  #feed::-webkit-scrollbar-thumb {
+    background: #0052cc;
+    border-radius: 4px;
+  }
+  /* Footer branding */
+  footer {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>Media DediR</header>
+
+  <!-- Login Section -->
+  <section id="login-section" class="">
+    <div class="form-container">
+      <form id="login-form">
+        <div>
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" required autocomplete="username" />
+        </div>
+        <div>
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" required autocomplete="current-password" />
+        </div>
+        <button type="submit">Log In</button>
+      </form>
+      <button class="link-button" id="to-register">Don't have an account? Register</button>
+      <p class="error-message" id="login-error"></p>
+    </div>
+  </section>
+
+  <!-- Register Section -->
+  <section id="register-section" class="hidden">
+    <div class="form-container">
+      <form id="register-form">
+        <div>
+          <label for="reg-username">Choose Username</label>
+          <input type="text" id="reg-username" required autocomplete="username" />
+        </div>
+        <div>
+          <label for="reg-password">Choose Password</label>
+          <input type="password" id="reg-password" required autocomplete="new-password" />
+        </div>
+        <div>
+          <label for="reg-password-confirm">Confirm Password</label>
+          <input type="password" id="reg-password-confirm" required autocomplete="new-password" />
+        </div>
+        <button type="submit">Register</button>
+      </form>
+      <button class="link-button" id="to-login">Already have an account? Log In</button>
+      <p class="error-message" id="register-error"></p>
+    </div>
+  </section>
+
+  <!-- Main Social Feed Section -->
+  <section id="main-section" class="hidden">
+    <div id="userbar">
+      <div id="username-display"></div>
+      <button id="logout-btn">Log Out</button>
+    </div>
+    <div class="form-container">
+      <form id="post-form">
+        <input type="text" id="post-input" placeholder="What's on your mind?" maxlength="280" required />
+        <button type="submit">Post</button>
+      </form>
+    </div>
+    <div id="feed"></div>
+  </section>
+</div>
+<footer>Media DediR Social Media Demo &copy; 2024</footer>
+
+<script>
+  // Utility for localStorage keys
+  const LS_USERS = 'users'; // stored as array of {username, password}
+  const LS_POSTS = 'posts'; // stored as array of {username, message, timestamp}
+  const LS_CURRENT_USER = 'currentUser';
+
+  // DOM Elements
+  const loginSection = document.getElementById('login-section');
+  const registerSection = document.getElementById('register-section');
+  const mainSection = document.getElementById('main-section');
+  const loginForm = document.getElementById('login-form');
+  const registerForm = document.getElementById('register-form');
+  const postForm = document.getElementById('post-form');
+  const postInput = document.getElementById('post-input');
+  const feedDiv = document.getElementById('feed');
+  const usernameDisplay = document.getElementById('username-display');
+  const logoutBtn = document.getElementById('logout-btn');
+  const toRegisterBtn = document.getElementById('to-register');
+  const toLoginBtn = document.getElementById('to-login');
+  const loginError = document.getElementById('login-error');
+  const registerError = document.getElementById('register-error');
+
+  // Load users from localStorage
+  function loadUsers() {
+    const usersJSON = localStorage.getItem(LS_USERS);
+    return usersJSON ? JSON.parse(usersJSON) : [];
+  }
+
+  // Save users to localStorage
+  function saveUsers(users) {
+    localStorage.setItem(LS_USERS, JSON.stringify(users));
+  }
+
+  // Load posts from localStorage
+  function loadPosts() {
+    const postsJSON = localStorage.getItem(LS_POSTS);
+    return postsJSON ? JSON.parse(postsJSON) : [];
+  }
+
+  // Save posts to localStorage
+  function savePosts(posts) {
+    localStorage.setItem(LS_POSTS, JSON.stringify(posts));
+  }
+
+  // Save current user to localStorage
+  function setCurrentUser(username) {
+    localStorage.setItem(LS_CURRENT_USER, username);
+  }
+
+  // Get current user from localStorage
+  function getCurrentUser() {
+    return localStorage.getItem(LS_CURRENT_USER);
+  }
+
+  // Remove current user from localStorage
+  function clearCurrentUser() {
+    localStorage.removeItem(LS_CURRENT_USER);
+  }
+
+  // Switch between views
+  function showSection(section) {
+    loginSection.classList.add('hidden');
+    registerSection.classList.add('hidden');
+    mainSection.classList.add('hidden');
+
+    section.classList.remove('hidden');
+  }
+
+  // Render the posts feed
+  function renderFeed() {
+    const posts = loadPosts();
+    if (posts.length === 0) {
+      feedDiv.innerHTML = '<p style="color:#555;text-align:center;">No posts yet. Be the first to post!</p>';
+      return;
+    }
+    // Sort posts by timestamp descending
+    posts.sort((a,b) => b.timestamp - a.timestamp);
+    feedDiv.innerHTML = '';
+    posts.forEach(post => {
+      const postEl = document.createElement('div');
+      postEl.className = 'post';
+      const date = new Date(post.timestamp);
+      postEl.innerHTML = `
+        <div class="post-header">${escapeHTML(post.username)} <span style="font-weight:400; font-size:0.8rem; color:#777;">- ${date.toLocaleString()}</span></div>
+        <div class="post-message">${escapeHTML(post.message)}</div>
+      `;
+      feedDiv.appendChild(postEl);
+    });
+  }
+
+  // Escape HTML to prevent XSS
+  function escapeHTML(string) {
+    const div = document.createElement('div');
+    div.textContent = string;
+    return div.innerHTML;
+  }
+
+  // Handle login
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    loginError.textContent = '';
+    const username = loginForm['login-username'].value.trim();
+    const password = loginForm['login-password'].value;
+
+    const users = loadUsers();
+    const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+
+    if (!user) {
+      loginError.textContent = 'Username does not exist.';
+      return;
+    }
+    if (user.password !== password) {
+      loginError.textContent = 'Incorrect password.';
+      return;
+    }
+
+    setCurrentUser(user.username);
+    loginForm.reset();
+    setAppToLoggedInState();
+  });
+
+  // Handle registration
+  registerForm.addEventListener('submit', e => {
+    e.preventDefault();
+    registerError.textContent = '';
+    const username = registerForm['reg-username'].value.trim();
+    const password = registerForm['reg-password'].value;
+    const passwordConfirm = registerForm['reg-password-confirm'].value;
+
+    const users = loadUsers();
+    const exists = users.some(u => u.username.toLowerCase() === username.toLowerCase());
+
+    if (username.length < 3) {
+      registerError.textContent = 'Username must be at least 3 characters.';
+      return;
+    }
+    if (exists) {
+      registerError.textContent = 'Username already taken.';
+      return;
+    }
+    if (password.length < 6) {
+      registerError.textContent = 'Password must be at least 6 characters.';
+      return;
+    }
+    if (password !== passwordConfirm) {
+      registerError.textContent = 'Passwords do not match.';
+      return;
+    }
+
+    users.push({username, password});
+    saveUsers(users);
+
+    setCurrentUser(username);
+    registerForm.reset();
+    setAppToLoggedInState();
+  });
+
+  // Handle post submission
+  postForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const message = postInput.value.trim();
+    if (!message) return;
+
+    const username = getCurrentUser();
+    const posts = loadPosts();
+
+    posts.push({
+      username,
+      message,
+      timestamp: Date.now()
+    });
+
+    savePosts(posts);
+    postInput.value = '';
+    renderFeed();
+  });
+
+  // Logout handling
+  logoutBtn.addEventListener('click', () => {
+    clearCurrentUser();
+    setAppToLoggedOutState();
+  });
+
+  // Navigation buttons
+  toRegisterBtn.addEventListener('click', () => {
+    loginError.textContent = '';
+    registerError.textContent = '';
+    showSection(registerSection);
+  });
+  toLoginBtn.addEventListener('click', () => {
+    loginError.textContent = '';
+    registerError.textContent = '';
+    showSection(loginSection);
+  });
+
+  // Set app to logged-in state
+  function setAppToLoggedInState() {
+    const username = getCurrentUser();
+    if (!username) {
+      setAppToLoggedOutState();
+      return;
+    }
+    usernameDisplay.textContent = username;
+    showSection(mainSection);
+    renderFeed();
+  }
+
+  // Set app to logged-out state
+  function setAppToLoggedOutState() {
+    showSection(loginSection);
+  }
+
+  // On page load check if user logged in
+  document.addEventListener('DOMContentLoaded', () => {
+    const username = getCurrentUser();
+    if (username) {
+      setAppToLoggedInState();
+    } else {
+      setAppToLoggedOutState();
+    }
+  });
+</script>
+</body>
+</html>
+
